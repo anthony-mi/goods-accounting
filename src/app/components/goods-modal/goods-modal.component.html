@@ -1,0 +1,81 @@
+<div [class]="visible ? 'modal fade in' : 'modal fade'" [style.display]="visible ? 'block' : 'none'">
+	<div class="modal-mask"></div>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form>
+					<div class="modal-header">						
+						<h4 class="modal-title">{{title}}</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="close()">&times;</button>
+					</div>
+
+					<div  class="modal-body" (click)="close()"
+					[hidden]="!currentWindowIsSuccess()"
+					style="text-align: center;">
+						<img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="Success">
+						<h1>Success!</h1>
+						<p>Goods '{{currentGoods.name}}' successfully saved.</p>
+					 </div>
+
+					 <div  class="modal-body" (click)="close()"
+					 [hidden]="!currentWindowIsError()"
+					 style="text-align: center;">
+						<img src="https://pngimage.net/wp-content/uploads/2018/05/false-sign-png-4.png" alt="Error" 
+						style="width: 210px; height: 210px; margin: 0px;">
+						<h1>Error!</h1>
+						<p>Goods '{{currentGoods.name}}' doesn't saved.</p>
+					 </div>
+
+					 <div  class="modal-body" (click)="close()"
+					 [hidden]="!currentWindowIsYesNoMessage()"
+					 style="text-align: center;">
+						<h3>{{message}}</h3>
+					 </div>
+
+					<div  class="modal-body"
+					[hidden]="!currentWindowIsForm()">					
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" class="form-control" required [(ngModel)]="currentGoods.name" name="name" #name="ngModel">
+							<!-- <div [hidden]="name.valid" class="alert alert-danger">
+								Name is required
+                        	</div> -->
+						</div>
+						<div class="form-group">
+							<label>Count</label>
+							<input type="number" class="form-control" required [(ngModel)]="currentGoods.count" name="count">
+						</div>
+						<div class="form-group">
+							<label>Purchase price</label>
+							<input type="number" class="form-control" required [(ngModel)]="currentGoods.purchasePrice" name="purchase_price">
+						</div>
+						<div class="form-group">
+							<label>Sale price</label>
+							<input type="number" class="form-control" required [(ngModel)]="currentGoods.salePrice" name="sale_price">
+						</div>
+						<div class="form-group">
+							<label>Count of sold</label>
+							<input type="number" class="form-control" required [(ngModel)]="currentGoods.countOfSold" name="count_of_sold">
+						</div>					
+					</div>
+					
+					<div class="modal-footer" [hidden]="!currentWindowIsForm()">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="close()">
+						<input type="submit" class="btn btn-info" value="Save" (click)="save()">
+					</div>
+
+					<div class="modal-footer" [hidden]="!currentWindowIsYesNoMessage()">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="No" (click)="noClick()">
+						<input type="submit" class="btn btn-info" value="Yes" (click)="yesClick()">
+					</div>
+
+					<div [hidden]="!showErrorMessage" class="alert alert-danger">
+						<ul>
+							<li *ngFor="let message of errorMessages">
+								{{message}}
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
