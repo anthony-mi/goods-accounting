@@ -57,6 +57,14 @@
 							<input type="number" class="form-control" required [(ngModel)]="currentGoods.countOfSold" name="count_of_sold">
 						</div>					
 					</div>
+
+					<div  class="modal-body"
+					[hidden]="!currentWindowIsNumberForm()">					
+						<div class="form-group">
+							<label>Number</label>
+							<input type="number" class="form-control" required [(ngModel)]="_inputNumber" name="number">
+						</div>				
+					</div>
 					
 					<div class="modal-footer" [hidden]="!currentWindowIsForm()">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="close()">
