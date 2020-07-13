@@ -11,13 +11,22 @@ import { GoodsModalComponent } from '../goods-modal/goods-modal.component';
   providers: [GoodsService]
 })
 export class GoodsgridComponent implements OnInit, AfterViewInit  {
+
+  constructor(private goodsService: GoodsService, private elementRef: ElementRef) { }
   @ViewChild(GoodsModalComponent, {static: true})
   private goodsModal: GoodsModalComponent;
 
   private goods: Array<Goods>;
   private selectedGoods: Array<Goods>;
 
-  constructor(private goodsService: GoodsService, private elementRef: ElementRef) { }
+  // TODO: add @out parameter to originalObject
+  private static updateGoodsFields(originalObject: Goods, newObjectState: Goods): void {
+    originalObject.count = newObjectState.count;
+    originalObject.countOfSold = newObjectState.countOfSold;
+    originalObject.name = newObjectState.name;
+    originalObject.purchasePrice = newObjectState.purchasePrice;
+    originalObject.salePrice = newObjectState.salePrice;
+  }
 
   ngOnInit() {
     this.goodsModal.goodsCreationEvent.subscribe(item => this.goodsCreationEventHandler(item));
@@ -62,9 +71,12 @@ export class GoodsgridComponent implements OnInit, AfterViewInit  {
   }
 
   goodsUpdatingEventHandler(sender: GoodsModalComponent) {
-    sender.close();
+    const clonedGoods = Object.assign({}, sender.currentGoods);
 
-    if (this.goodsService.updateGoods(sender.currentGoods)) {
+    if (this.goodsService.updateGoods(clonedGoods)) {
+      // tslint:disable-next-line: prefer-const
+      let goodsForUpdating = this.goods.find(goods => goods.id === clonedGoods.id);
+      GoodsgridComponent.updateGoodsFields(goodsForUpdating, clonedGoods);
       this.goodsModal.showSuccessMessage();
     } else {
       this.goodsModal.showErrorResult();

@@ -10,6 +10,8 @@ import { ModalWindowType } from './modal-window-type';
 })
 export class GoodsModalComponent implements OnInit {
   private visible: boolean;
+  // tslint:disable-next-line: variable-name
+  private _inputNumber: number;
 
   // tslint:disable-next-line: variable-name
   private _title: string;
@@ -33,6 +35,7 @@ export class GoodsModalComponent implements OnInit {
 
   public goodsCreationEvent = new EventEmitter();
   public goodsUpdatingEvent = new EventEmitter();
+  public numberInputedEvent = new EventEmitter();
 
   constructor() {
 
@@ -51,6 +54,11 @@ export class GoodsModalComponent implements OnInit {
     return this._goods;
   }
 
+  get inputNumber(): number {
+    return this.inputNumber;
+  }
+
+  // tslint:disable-next-line: adjacent-overload-signatures
   set currentGoods(value: Goods) {
     this._goods.id = value.id;
     this._goods.name = value.name;
@@ -82,6 +90,12 @@ export class GoodsModalComponent implements OnInit {
     this.visible = true;
   }
 
+  public showNumberForm() {
+    this.clear();
+    this._currentWindowType = ModalWindowType.NumberRequest;
+    this.visible = true;
+  }
+
   public showSuccessMessage() {
     this._currentWindowType = ModalWindowType.Success;
     this.showErrorMessage = false;
@@ -108,6 +122,10 @@ export class GoodsModalComponent implements OnInit {
   }
 
   public save() {
+    if (this._currentWindowType === ModalWindowType.NumberRequest) {
+      this.numberInputedEvent.emit(this);
+    }
+
     this.errorMessages = new Array<string>();
 
     if (this._goods.name === '') {
@@ -175,5 +193,9 @@ export class GoodsModalComponent implements OnInit {
 
   public currentWindowIsYesNoMessage() {
     return this._currentWindowType === ModalWindowType.YesNoMessage;
+  }
+
+  public currentWindowIsNumberForm() {
+    return this._currentWindowType === ModalWindowType.NumberRequest;
   }
 }
