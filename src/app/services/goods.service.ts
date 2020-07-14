@@ -25,9 +25,9 @@ export class GoodsService {
         //         })
         // );
 
-        const g1 = new Goods(1, 'First', 5, 50, 70, 2);
-        const g2 = new Goods(2, 'Second', 2, 30, 50, 3);
-        const g3 = new Goods(3, 'Third', 0, 100, 140, 10);
+        const g1 = new Goods(1, 'Honey Badger Mild Blueberry', 5, 190, 220, 2);
+        const g2 = new Goods(2, 'B3 Rich Grape', 2, 50, 75, 3);
+        const g3 = new Goods(3, 'Dark Side Medium Green Beam', 0, 400, 450, 10);
 
         return of([g1, g2, g3]);
     }
