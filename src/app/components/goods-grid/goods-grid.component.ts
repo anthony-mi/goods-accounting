@@ -3,6 +3,7 @@ import { ModalAction } from './../goods-modal/modal-action';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Goods } from 'src/app/entities/goods';
 import { GoodsModalComponent } from '../goods-modal/goods-modal.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-goods-grid',
@@ -11,6 +12,7 @@ import { GoodsModalComponent } from '../goods-modal/goods-modal.component';
   providers: [GoodsService]
 })
 export class GoodsgridComponent implements OnInit, AfterViewInit  {
+  private numberInputEventSubscription: Subscription;
 
   constructor(private goodsService: GoodsService, private elementRef: ElementRef) { }
   @ViewChild(GoodsModalComponent, {static: true})
@@ -59,6 +61,7 @@ export class GoodsgridComponent implements OnInit, AfterViewInit  {
       this.goodsModal.showSuccessMessage();
       this.goods.push(clone);
     } else {
+      this.goodsModal.errorMessage = `Goods '${clone.name}' doesn't created.`;
       this.goodsModal.showErrorResult();
     }
   }
@@ -79,6 +82,7 @@ export class GoodsgridComponent implements OnInit, AfterViewInit  {
       GoodsgridComponent.updateGoodsFields(goodsForUpdating, clonedGoods);
       this.goodsModal.showSuccessMessage();
     } else {
+      this.goodsModal.errorMessage = `Goods '${clonedGoods.name}' doesn't updated.`;
       this.goodsModal.showErrorResult();
     }
   }
@@ -112,11 +116,48 @@ export class GoodsgridComponent implements OnInit, AfterViewInit  {
   }
 
   setAsSold(goods: Goods) {
+    const modal = this.goodsModal;
+    modal.showNumberForm();
 
+    this.numberInputEventSubscription = modal.numberInputedEvent.subscribe(number => {
+      if (number <= 0) {
+        modal.title = 'Validation error';
+        modal.errorMessage = 'Number must be greater than 0.';
+        modal.showErrorResult();
+      } else if (number > goods.count) {
+        modal.title = 'Logical error';
+        modal.errorMessage = 'Number must be less or equal to count of goods.';
+        modal.showErrorResult();
+      } else {
+        goods.count -= number;
+        goods.countOfSold += number;
+        modal.showSuccessMessage();
+      }
+
+      this.numberInputEventSubscription.unsubscribe();
+    });
   }
 
   writeOff(goods: Goods) {
+    const modal = this.goodsModal;
+    modal.showNumberForm();
 
+    this.numberInputEventSubscription = modal.numberInputedEvent.subscribe(number => {
+      if (number <= 0) {
+        modal.title = 'Validation error';
+        modal.errorMessage = 'Number must be greater than 0.';
+        modal.showErrorResult();
+      } else if (number > goods.count) {
+        modal.title = 'Logical error';
+        modal.errorMessage = 'Number must be less or equal to count of goods.';
+        modal.showErrorResult();
+      } else {
+        goods.count -= number;
+        modal.showSuccessMessage();
+      }
+
+      this.numberInputEventSubscription.unsubscribe();
+    });
   }
 
   toggleSelect(goods: Goods, checked: boolean) {
@@ -132,7 +173,7 @@ export class GoodsgridComponent implements OnInit, AfterViewInit  {
 
   toggleSelectAll(checked: boolean) {
     if (checked) {
-      const clonedArray  = Object.assign([], this.goods);
+      const clonedArray = Object.assign([], this.goods);
       this.selectedGoods = clonedArray;
     } else {
       this.selectedGoods = new Array<Goods>();

@@ -18,6 +18,8 @@ export class GoodsModalComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   private _message: string;
   // tslint:disable-next-line: variable-name
+  private _errorMessage: string;
+  // tslint:disable-next-line: variable-name
   private _goods: Goods;
 
   // tslint:disable-next-line: variable-name
@@ -84,6 +86,14 @@ export class GoodsModalComponent implements OnInit {
     this._message = value;
   }
 
+  get errorMessage(): string {
+    return this._errorMessage;
+  }
+
+  set errorMessage(value: string) {
+    this._errorMessage = value;
+  }
+
   public showForm() {
     this._currentWindowType = ModalWindowType.Form;
     this.showErrorMessage = false;
@@ -119,11 +129,13 @@ export class GoodsModalComponent implements OnInit {
     this.currentGoods = new Goods(0, '', 0, 0, 0, 0);
     this.showErrorMessage = false;
     this.errorMessages = new Array<string>();
+    this._inputNumber = 0;
   }
 
   public save() {
     if (this._currentWindowType === ModalWindowType.NumberRequest) {
-      this.numberInputedEvent.emit(this);
+      this.numberInputedEvent.emit(this._inputNumber);
+      return;
     }
 
     this.errorMessages = new Array<string>();

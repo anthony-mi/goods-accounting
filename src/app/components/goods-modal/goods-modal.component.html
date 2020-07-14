@@ -22,7 +22,8 @@
 						<img src="https://pngimage.net/wp-content/uploads/2018/05/false-sign-png-4.png" alt="Error" 
 						style="width: 210px; height: 210px; margin: 0px;">
 						<h1>Error!</h1>
-						<p>Goods '{{currentGoods.name}}' doesn't saved.</p>
+						<p>{{errorMessage}}</p>
+						<!-- <p>Goods '{{currentGoods.name}}' doesn't saved.</p> -->
 					 </div>
 
 					 <div  class="modal-body" (click)="close()"
@@ -74,6 +75,11 @@
 					<div class="modal-footer" [hidden]="!currentWindowIsYesNoMessage()">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="No" (click)="noClick()">
 						<input type="submit" class="btn btn-info" value="Yes" (click)="yesClick()">
+					</div>
+
+					<div class="modal-footer" [hidden]="!currentWindowIsNumberForm()">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="close()">
+						<input type="submit" class="btn btn-info" value="Confirm" (click)="save()">
 					</div>
 
 					<div [hidden]="!showErrorMessage" class="alert alert-danger">
